@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
-import 'package:flutter_application_personal_expense_app/controller/components/expense.dart';
 
 import 'monthly_expense.dart';
-import '../weekly/weekly_expense_summary.dart';
 
 class MonthlyExpensePage extends StatelessWidget {
   @override

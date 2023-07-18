@@ -8,7 +8,6 @@ import 'package:flutter_application_personal_expense_app/controller/expense_data
 
 import 'monthly/monthly_expense.dart';
 import 'monthly/monthly_expense_tile.dart';
-import 'weekly/weekly_expense_summary.dart';
 
 class BarChartSummary extends StatefulWidget {
   const BarChartSummary({Key? key}) : super(key: key);

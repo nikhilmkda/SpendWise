@@ -1,24 +1,22 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
-import 'package:flutter_application_personal_expense_app/sdsxs.dart';
+
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/tab_provider.dart';
 import 'controller/user_provider/profile_image_provider.dart';
 import 'controller/user_provider/user_provider.dart';
-import 'view/homepage.dart';
 
 void main() async {
   //initialize hive
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
-  
+
   //open a hive box
   await Hive.openBox('expense_database');
   await Hive.openBox('userProfileBox');

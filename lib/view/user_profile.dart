@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/user_provider/profile_image_provider.dart';
 import '../controller/user_provider/user_provider.dart';
 
 class UserProfilePage extends StatefulWidget {
