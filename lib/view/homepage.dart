@@ -3,7 +3,11 @@ import 'package:flutter_application_personal_expense_app/view/weekly/weekly_expe
 import 'package:flutter_application_personal_expense_app/view/expense_tile.dart';
 import 'package:flutter_application_personal_expense_app/controller/components/expense.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+import '../controller/change theme/theme_provider.dart';
+import '../controller/user_provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -161,38 +165,69 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
+    final currentTheme = Provider.of<ThemeProvider>(context);
+    final currentThemeMode = currentTheme.currentThemeMode;
+    userDetailsProvider.loadUserProfile();
     return Consumer<ExpenseData>(
         builder: (context, value, child) => Scaffold(
-            backgroundColor: Colors.grey.shade300,
+            backgroundColor: currentThemeMode == ThemeMode.light
+                ? Colors.grey.shade300
+                : Colors.black45,
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.black87,
+              backgroundColor: currentThemeMode == ThemeMode.light
+                  ? Colors.black
+                  : Colors.grey.shade300,
               onPressed: addNewExpense,
               child: const Icon(Icons.add),
             ),
             body: ListView(
               children: [
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.search,
-                      color: Colors.grey.shade900,
-                      size: 35,
-                    ),
-                    onPressed: () {
-                      // Add your search button functionality here
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.notifications,
-                      color: Colors.grey.shade900,
-                      size: 35,
-                    ),
-                    onPressed: () {
-                      // Add your bell button functionality here
-                    },
-                  ),
-                ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          ' Hey ${userDetailsProvider.nameController.text}',
+                          style: GoogleFonts.roboto(
+                              color: currentThemeMode == ThemeMode.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.search,
+                              color: currentThemeMode == ThemeMode.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              size: 35,
+                            ),
+                            onPressed: () {
+                              // Add your search button functionality here
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.notifications,
+                              color: currentThemeMode == ThemeMode.light
+                                  ? Colors.black
+                                  : Colors.white,
+                              size: 35,
+                            ),
+                            onPressed: () {
+                              // Add your bell button functionality here
+                            },
+                          ),
+                        ],
+                      ),
+                    ]),
                 const SizedBox(
                   height: 20,
                 ),

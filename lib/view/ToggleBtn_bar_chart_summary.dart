@@ -6,6 +6,7 @@ import 'package:flutter_toggle_tab/helper.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
 
+import '../controller/change theme/theme_provider.dart';
 import 'monthly/monthly_expense.dart';
 import 'monthly/monthly_expense_tile.dart';
 
@@ -23,6 +24,8 @@ class _BarChartSummaryState extends State<BarChartSummary> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
+    final currentThemeMode = currentTheme.currentThemeMode;
     return Consumer<ExpenseData>(
       builder: (context, expenseData, _) {
         final List<Widget> pages = [
@@ -32,7 +35,9 @@ class _BarChartSummaryState extends State<BarChartSummary> {
         ];
 
         return Scaffold(
-          backgroundColor: Colors.grey.shade300,
+          backgroundColor: currentThemeMode == ThemeMode.light
+              ? Colors.grey.shade300
+              : Colors.black,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[

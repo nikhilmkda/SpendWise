@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/tab_provider.dart';
+import 'controller/change theme/theme_provider.dart';
 import 'controller/user_provider/profile_image_provider.dart';
 import 'controller/user_provider/user_provider.dart';
 
@@ -21,7 +22,12 @@ void main() async {
   await Hive.openBox('expense_database');
   await Hive.openBox('userProfileBox');
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,6 +35,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Provider.of<ThemeProvider>(context);
+    final currentThemeMode = currentTheme.currentThemeMode;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ExpenseData()),
@@ -39,20 +47,25 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Expense App',
         debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: Provider.of<ThemeProvider>(context).currentThemeMode,
         home: Scaffold(
-          backgroundColor: Colors.grey.shade300,
+          //backgroundColor: Colors.grey.shade300,
           bottomNavigationBar: Consumer<TabProvider>(
             builder: (context, tabProvider, _) => Padding(
               padding: const EdgeInsets.only(bottom: 0, left: 0, right: 0),
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                     bottomLeft: Radius.circular(0),
                     bottomRight: Radius.circular(0),
                   ),
-                  color: Colors.black87,
+                  color: currentThemeMode == ThemeMode.light
+                      ? Colors.black
+                      : Colors.grey.shade300,
                 ),
                 child: Padding(
                   padding:
@@ -61,28 +74,38 @@ class MyApp extends StatelessWidget {
                     //backgroundColor: Colors.black26,
                     gap: 3,
 
-                    hoverColor: Colors.white,
-                    activeColor: Colors.white,
+                    hoverColor: currentThemeMode == ThemeMode.light
+                        ? Colors.grey.shade300
+                        : Colors.black,
+                    activeColor: currentThemeMode == ThemeMode.light
+                        ? Colors.grey.shade300
+                        : Colors.black,
                     tabBackgroundColor: Colors.white24,
                     tabBorderRadius: 40,
                     iconSize: 24,
                     padding: const EdgeInsets.all(12),
                     duration: const Duration(milliseconds: 400),
-                    tabs: const [
+                    tabs: [
                       GButton(
                         icon: Icons.home,
                         text: 'Home',
-                        iconColor: Colors.white,
+                        iconColor: currentThemeMode == ThemeMode.light
+                            ? Colors.grey.shade300
+                            : Colors.black,
                       ),
                       GButton(
                         icon: Icons.person,
                         text: 'Profile',
-                        iconColor: Colors.white,
+                        iconColor: currentThemeMode == ThemeMode.light
+                            ? Colors.grey.shade300
+                            : Colors.black,
                       ),
                       GButton(
                         icon: Icons.bar_chart_rounded,
                         text: 'Chart',
-                        iconColor: Colors.white,
+                        iconColor: currentThemeMode == ThemeMode.light
+                            ? Colors.grey.shade300
+                            : Colors.black,
                       ),
                     ],
                     selectedIndex: tabProvider.currentIndex,
