@@ -91,11 +91,11 @@ class UserProfilePageState extends State<UserProfilePage> {
                     labelStyle: TextStyle(
                       color: currentThemeMode == ThemeMode.light
                           ? Colors.grey
-                          : Colors.white,
+                          : Colors.white60,
                     ),
                     filled: true,
                     fillColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade300
+                        ? Colors.grey.shade50
                         : Colors.black87,
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
@@ -124,11 +124,11 @@ class UserProfilePageState extends State<UserProfilePage> {
                     labelStyle: TextStyle(
                       color: currentThemeMode == ThemeMode.light
                           ? Colors.grey
-                          : Colors.white,
+                          : Colors.white60,
                     ),
                     filled: true,
                     fillColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade300
+                        ? Colors.grey.shade50
                         : Colors.black,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
@@ -157,11 +157,11 @@ class UserProfilePageState extends State<UserProfilePage> {
                     labelStyle: TextStyle(
                       color: currentThemeMode == ThemeMode.light
                           ? Colors.grey
-                          : Colors.white,
+                          : Colors.white60,
                     ),
                     filled: true,
                     fillColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade300
+                        ? Colors.grey.shade50
                         : Colors.black,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),

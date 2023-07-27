@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/change theme/theme_provider.dart';
+import '../controller/notification_provider.dart';
 import '../controller/user_provider/user_provider.dart';
 
 class Homepage extends StatefulWidget {
@@ -130,6 +131,12 @@ class _HomepageState extends State<Homepage> {
       );
       Provider.of<ExpenseData>(context, listen: false)
           .editExpense(originalExpense, () => editedExpense);
+      Provider.of<NotificationProvider>(context, listen: false)
+          .showNotification(
+        title: 'Edited ${newExpenseNameContorller.text} expense\n',
+        body:
+            '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
+      );
     }
   }
 
@@ -144,6 +151,12 @@ class _HomepageState extends State<Homepage> {
         amount: newExpenseAmountContorller.text,
         dateTime: DateTime.now(),
         id: '',
+      );
+      Provider.of<NotificationProvider>(context, listen: false)
+          .showNotification(
+        title: 'Added New expense ${newExpenseNameContorller.text}\n',
+        body:
+            '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
       );
       Provider.of<ExpenseData>(context, listen: false)
           .addNewExpense(newExpense);
@@ -166,6 +179,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
+    //final notificationProvider = Provider.of<NotificationProvider>(context);
     final currentTheme = Provider.of<ThemeProvider>(context);
     final currentThemeMode = currentTheme.currentThemeMode;
     userDetailsProvider.loadUserProfile();
@@ -177,7 +191,7 @@ class _HomepageState extends State<Homepage> {
             floatingActionButton: FloatingActionButton(
               backgroundColor: currentThemeMode == ThemeMode.light
                   ? Colors.black
-                  : Colors.grey.shade300,
+                  : Colors.amber.shade700,
               onPressed: addNewExpense,
               child: const Icon(Icons.add),
             ),

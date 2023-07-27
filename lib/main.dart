@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
 
 import 'package:hive/hive.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
+import 'controller/notification_provider.dart';
 import 'controller/tab_provider.dart';
 import 'controller/change theme/theme_provider.dart';
 import 'controller/user_provider/profile_image_provider.dart';
@@ -15,6 +17,9 @@ import 'controller/user_provider/user_provider.dart';
 void main() async {
   //initialize hive
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationProvider().initializeNotifications();
+  await _requestNotificationPermission(); //remove if error
+
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
 
@@ -30,6 +35,14 @@ void main() async {
   );
 }
 
+// remove _requestNotificationPermission if error
+Future<void> _requestNotificationPermission() async {
+  var status = await Permission.notification.status;
+  if (!status.isGranted) {
+    await Permission.notification.request();
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -43,6 +56,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TabProvider()),
         ChangeNotifierProvider(create: (_) => UserDetailsProvider()),
         ChangeNotifierProvider(create: (_) => ProfileImageProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: MaterialApp(
         title: 'Expense App',
@@ -58,8 +72,8 @@ class MyApp extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(5),
+                    topRight: Radius.circular(5),
                     bottomLeft: Radius.circular(0),
                     bottomRight: Radius.circular(0),
                   ),
@@ -69,18 +83,20 @@ class MyApp extends StatelessWidget {
                 ),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: GNav(
                     //backgroundColor: Colors.black26,
                     gap: 3,
 
                     hoverColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade300
-                        : Colors.black,
+                        ? Colors.amber
+                        : Colors.amber,
                     activeColor: currentThemeMode == ThemeMode.light
                         ? Colors.grey.shade300
                         : Colors.black,
-                    tabBackgroundColor: Colors.white24,
+                    tabBackgroundColor: currentThemeMode == ThemeMode.light
+                        ? Colors.grey.shade700
+                        : Colors.black38,
                     tabBorderRadius: 40,
                     iconSize: 24,
                     padding: const EdgeInsets.all(12),
