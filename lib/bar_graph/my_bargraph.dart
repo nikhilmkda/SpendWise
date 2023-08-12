@@ -209,7 +209,7 @@ class MyBarGraphMonthly extends StatelessWidget {
           .map((data) => BarChartGroupData(x: data.x, barRods: [
                 BarChartRodData(
                     toY: data.y,
-                    color: Colors.yellow[800],
+                    color: Colors.yellow[900],
                     width: 12,
                     borderRadius: BorderRadius.circular(3),
                     backDrawRodData: BackgroundBarChartRodData(
@@ -222,7 +222,7 @@ class MyBarGraphMonthly extends StatelessWidget {
 
 Widget getBottomTilesMonthly(double value, TitleMeta meta) {
   const style =
-      TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 14);
+      TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 12);
   Widget text;
   switch (value.toInt()) {
     case 0:

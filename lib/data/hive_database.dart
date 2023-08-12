@@ -5,10 +5,9 @@ import '../controller/components/expense.dart';
 class HiveDatabase {
   //reference our box
   final mybox = Hive.box('expense_database');
-  
 
   //write data
-
+ 
   void saveData(List<ExpenseItem> allExpense) {
     List<List<dynamic>> allExpenseFormatted = [];
 
@@ -27,6 +26,7 @@ class HiveDatabase {
 
   //read data
 
+
   List<ExpenseItem> readData() {
     //convert saved data in to expense objects
 
@@ -40,8 +40,11 @@ class HiveDatabase {
 
       //create expense item
 
-      ExpenseItem expense =
-          ExpenseItem(name: name, amount: amount, dateTime: dateTime, id: ''); //if error remove id
+      ExpenseItem expense = ExpenseItem(
+          name: name,
+          amount: amount,
+          dateTime: dateTime,
+          id: ''); //if error remove id
 
       //add expense to overall list of expenses
 

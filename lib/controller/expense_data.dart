@@ -26,12 +26,6 @@ class ExpenseData extends ChangeNotifier {
 
   //add new expense
 
-  // void addNewExpense(ExpenseItem newExpense) {
-  //   notifyListeners();
-  //   overallexpenseList.add(newExpense);
-  //   db.saveData(overallexpenseList);
-  // }
-  // if error occured remove this function and un commment the above function
   void addNewExpense(ExpenseItem newExpense) {
     final uniqueId = UniqueKey().toString();
     final updatedExpense = newExpense.copyWith(id: uniqueId);
@@ -82,13 +76,15 @@ class ExpenseData extends ChangeNotifier {
         return '';
     }
   }
-  //weekly expense sum calculated 
-   Map<String, double> calculateWeeklyExpenseSummary() {
+
+  //weekly expense sum calculated
+  Map<String, double> calculateWeeklyExpenseSummary() {
     Map<String, double> weeklyExpenseSummary = {};
 
     for (var expense in overallexpenseList) {
       DateTime startOfWeek = startOfWeekDateTile(expense.dateTime);
-      String week = '${startOfWeek.year}-${startOfWeek.month}-${startOfWeek.day}';
+      String week =
+          '${startOfWeek.year}-${startOfWeek.month}-${startOfWeek.day}';
 
       if (weeklyExpenseSummary.containsKey(week)) {
         double currentAmount = weeklyExpenseSummary[week]!;
@@ -101,9 +97,11 @@ class ExpenseData extends ChangeNotifier {
 
     return weeklyExpenseSummary;
   }
+
   //get date for start of the week(sunday)
- DateTime startOfWeekDateTile(DateTime dateTime) {
-    DateTime startOfWeek = dateTime.subtract(Duration(days: dateTime.weekday - 1));
+  DateTime startOfWeekDateTile(DateTime dateTime) {
+    DateTime startOfWeek =
+        dateTime.subtract(Duration(days: dateTime.weekday - 1));
     return DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
   }
 

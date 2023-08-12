@@ -22,10 +22,10 @@ class ExpenseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = currentTheme.currentThemeMode;
+    // final currentTheme = Provider.of<ThemeProvider>(context);
+    // final currentThemeMode = currentTheme.currentThemeMode;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 12, top: 0),
       child: Slidable(
         startActionPane: ActionPane(
           motion: const StretchMotion(),
@@ -52,13 +52,17 @@ class ExpenseTile extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.white, Colors.white30],
+              colors: [
+                Theme.of(context).colorScheme.background,
+                Theme.of(context).colorScheme.background.withOpacity(0.6)
+              ],
             ),
             boxShadow: [
               BoxShadow(
-                color: currentThemeMode == ThemeMode.light
-                    ? Colors.black.withOpacity(0.2)
-                    : Colors.grey.shade300.withOpacity(0.2),
+                color: Theme.of(context)
+                    .colorScheme
+                    .inverseSurface
+                    .withOpacity(0.3),
 
                 //Colors.black.withOpacity(0.2),
                 offset: Offset(2, 2),
@@ -75,18 +79,19 @@ class ExpenseTile extends StatelessWidget {
               style: GoogleFonts.varelaRound(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Theme.of(context).colorScheme.primary),
             ),
             subtitle: Text(
               '${dateTime.day}/${dateTime.month}/${dateTime.year}',
-              style: GoogleFonts.nunito(fontSize: 16, color: Colors.black),
+              style: GoogleFonts.nunito(
+                  fontSize: 16, color: Theme.of(context).colorScheme.primary),
             ),
             trailing: Text(
-              '\$ $amount',
+              '₹ $amount',
               style: GoogleFonts.lato(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Theme.of(context).colorScheme.primary),
             ),
           ),
         ),

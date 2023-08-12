@@ -31,4 +31,3 @@ class NotificationProvider with ChangeNotifier {
     return notificationsPlugin.show(id, title, body, notificationDetails());
   }
 }
-//flutter_application_personal_expense_app   >>androidmanifest.xml>>label name

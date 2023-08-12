@@ -108,7 +108,7 @@ class ExpenseSummary extends StatelessWidget {
                       color: Colors.grey.shade700),
                 ),
                 Text(
-                  '\$${calculateWeekTotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}',
+                  '₹ ${calculateWeekTotal(value, sunday, monday, tuesday, wednesday, thursday, friday, saturday)}',
                   style: GoogleFonts.lato(
                       fontSize: 35, fontWeight: FontWeight.bold),
                 ),

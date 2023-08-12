@@ -9,12 +9,10 @@ import 'weekly_expense_summary.dart';
 class WeeklyExpensePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = currentTheme.currentThemeMode;
+    // final currentTheme = Provider.of<ThemeProvider>(context);
+    // final currentThemeMode = currentTheme.currentThemeMode;
     return Scaffold(
-      backgroundColor: currentThemeMode == ThemeMode.light
-          ? Colors.grey.shade300
-          : Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Consumer<ExpenseData>(
         builder: (context, expenseData, _) {
           // Calculate weekly expense summaries
@@ -22,62 +20,79 @@ class WeeklyExpensePage extends StatelessWidget {
               expenseData.calculateWeeklyExpenseSummary();
 
           // Reverse the order of the weeklyExpenses map
-          List<String> weeks = weeklyExpenses.keys.toList().reversed.toList();
+          List<String> weeks = weeklyExpenses.keys.toList();
+          weeks.sort((a, b) => a.compareTo(b));
 
-          return Column(
+          return ListView(
             children: [
               const SizedBox(
                 height: 20,
               ),
-              ExpenseSummary(startOfWeek: expenseData.startOfWeekDate()),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: weeklyExpenses.length,
-                  itemBuilder: (context, index) {
-                    String week = weeks[index];
-                    double totalExpense = weeklyExpenses[week] ?? 0.0;
 
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.white, Colors.white30],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              offset: Offset(2, 2),
-                              blurRadius: 4,
-                              spreadRadius: 1,
+              //weekly graph
+              ExpenseSummary(startOfWeek: expenseData.startOfWeekDate()),
+              ListView.builder(
+                reverse: true,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: weeklyExpenses.length,
+                itemBuilder: (context, index) {
+                  String week = weeks[index];
+                  double totalExpense = weeklyExpenses[week] ?? 0.0;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Theme.of(context).colorScheme.background,
+                                Theme.of(context)
+                                    .colorScheme
+                                    .background
+                                    .withOpacity(0.6)
+                              ],
                             ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        child: ListTile(
-                          title: Text(
-                            'Week of : ${week.substring(7)}${week.substring(4, 7)}${week.substring(0, 4)}',
-                            style: GoogleFonts.nunito(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.2),
+                                offset: Offset(2, 2),
+                                blurRadius: 4,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          trailing: Text(
-                            '\$$totalExpense',
-                            style: GoogleFonts.lato(
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          child: ListTile(
+                            title: Text(
+                              'Week of : ${week.substring(7)}${week.substring(4, 7)}${week.substring(0, 4)}',
+                              style: GoogleFonts.nunito(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
+                            trailing: Text(
+                              '₹ $totalExpense',
+                              style: GoogleFonts.lato(
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/change theme/theme_provider.dart';
-import '../controller/change theme/theme_switch.dart';
+import 'theme_switch.dart';
 import '../controller/user_provider/user_provider.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -24,16 +24,20 @@ class UserProfilePage extends StatefulWidget {
 
 class UserProfilePageState extends State<UserProfilePage> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<UserDetailsProvider>(context, listen: false).loadUserProfile();
+  }
+
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
-    final currentTheme = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = currentTheme.currentThemeMode;
+
+    // final currentTheme = Provider.of<ThemeProvider>(context);
+    // final currentThemeMode = currentTheme.currentThemeMode;
 
     // userDetailsProvider.loadUserProfile();
     return Scaffold(
-      backgroundColor: currentThemeMode == ThemeMode.light
-          ? Colors.grey.shade300
-          : Colors.black45,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         backgroundColor: Colors.black87,
         centerTitle: true,
@@ -51,9 +55,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                     backgroundImage: userDetailsProvider.image != null
                         ? FileImage(userDetailsProvider.image!)
                         : null,
-                    backgroundColor: currentThemeMode == ThemeMode.light
-                        ? Colors.black87
-                        : Colors.grey.shade300,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   Positioned(
                     bottom: 0,
@@ -64,12 +66,10 @@ class UserProfilePageState extends State<UserProfilePage> {
                       child: IconButton(
                         icon: Icon(
                           Icons.camera_alt,
-                          color: currentThemeMode == ThemeMode.light
-                              ? Colors.black87
-                              : Colors.grey.shade300,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         onPressed: () {
-                          userDetailsProvider.selectImage(context);
+                          userDetailsProvider.selectImageFromDevice(context);
                         },
                       ),
                     ),
@@ -82,21 +82,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                 child: TextFormField(
                   controller: userDetailsProvider.nameController,
                   style: TextStyle(
-                    color: currentThemeMode == ThemeMode.light
-                        ? Colors.black87
-                        : Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   decoration: InputDecoration(
                     labelText: 'Name',
                     labelStyle: TextStyle(
-                      color: currentThemeMode == ThemeMode.light
-                          ? Colors.grey
-                          : Colors.white60,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     filled: true,
-                    fillColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade50
-                        : Colors.black87,
+                    fillColor: Theme.of(context).colorScheme.background,
                     border: const OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                     ),
@@ -115,21 +109,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                 child: TextFormField(
                   controller: userDetailsProvider.emailController,
                   style: TextStyle(
-                    color: currentThemeMode == ThemeMode.light
-                        ? Colors.black
-                        : Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: TextStyle(
-                      color: currentThemeMode == ThemeMode.light
-                          ? Colors.grey
-                          : Colors.white60,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     filled: true,
-                    fillColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade50
-                        : Colors.black,
+                    fillColor: Theme.of(context).colorScheme.background,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                     ),
@@ -148,21 +136,15 @@ class UserProfilePageState extends State<UserProfilePage> {
                   controller: userDetailsProvider.phoneController,
                   keyboardType: TextInputType.number,
                   style: TextStyle(
-                    color: currentThemeMode == ThemeMode.light
-                        ? Colors.black
-                        : Colors.grey.shade300,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     labelStyle: TextStyle(
-                      color: currentThemeMode == ThemeMode.light
-                          ? Colors.grey
-                          : Colors.white60,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     filled: true,
-                    fillColor: currentThemeMode == ThemeMode.light
-                        ? Colors.grey.shade50
-                        : Colors.black,
+                    fillColor: Theme.of(context).colorScheme.background,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black),
                     ),
@@ -237,6 +219,9 @@ class UserProfilePageState extends State<UserProfilePage> {
                   'Save',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
+              ),
+              SizedBox(
+                height: 20,
               ),
               ThemeSwitchButton()
             ],

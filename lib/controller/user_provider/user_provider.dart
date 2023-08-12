@@ -1,8 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../view/user_profile.dart';
 
@@ -16,10 +17,11 @@ class UserDetailsProvider with ChangeNotifier {
 
   UserProfilePage getUserProfile() {
     return UserProfilePage(
-        name: nameController.text,
-        email: emailController.text,
-        phone: phoneController.text,
-        profileImage: '');
+      name: nameController.text,
+      email: emailController.text,
+      phone: phoneController.text,
+      profileImage: _image != null ? _image!.path : '',
+    );
   }
 
   void saveUserProfile() async {
@@ -32,6 +34,17 @@ class UserDetailsProvider with ChangeNotifier {
     };
     await userBox.put('userProfile', userProfile);
     userBox.close();
+
+    // Save the image path using shared_preferences
+    if (_image != null) {
+      final appDir = await getApplicationDocumentsDirectory();
+      final imagePath = appDir.path + '/profileImage.png';
+      _image!.copy(imagePath);
+
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('profileImagePath', imagePath);
+      print('Image path saved: $imagePath');
+    }
   }
 
   Future<void> loadUserProfile() async {
@@ -44,15 +57,19 @@ class UserDetailsProvider with ChangeNotifier {
       emailController.text = userProfile['email'];
       phoneController.text = userProfile['phone'];
 
-      // Load the image file using the file path string
+      notifyListeners();
+    }
 
-      //print('$userProfile');
-
+    // Load the image path using shared_preferences
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('profileImagePath');
+    if (imagePath != null && imagePath.isNotEmpty) {
+      _image = File(imagePath);
       notifyListeners();
     }
   }
 
-  Future<void> selectImage(BuildContext context) async {
+  Future<void> selectImageFromDevice(BuildContext context) async {
     final imageSource = await showDialog<ImageSource>(
       context: context,
       builder: (context) => AlertDialog(
@@ -74,6 +91,7 @@ class UserDetailsProvider with ChangeNotifier {
       final pickedFile = await ImagePicker().pickImage(source: imageSource);
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+
         notifyListeners();
       }
     }

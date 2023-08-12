@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/change theme/theme_provider.dart';
+import '../controller/date_picker/date_pick_provider.dart';
+import '../controller/merge_sort.dart';
 import '../controller/notification_provider.dart';
 import '../controller/user_provider/user_provider.dart';
 
@@ -32,10 +34,21 @@ class _HomepageState extends State<Homepage> {
 
   //add new expense
   void addNewExpense() {
+    final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
+    // final currentTheme = Provider.of<ThemeProvider>(context, listen: false);
+    // final currentThemeMode = currentTheme.currentThemeMode;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add New Expense'),
+        title: Text(
+          'Add New Expense',
+          style: GoogleFonts.roboto(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           //expense name
           TextField(
@@ -49,19 +62,53 @@ class _HomepageState extends State<Homepage> {
             decoration: const InputDecoration(hintText: "Expense Amount"),
             keyboardType: TextInputType.number,
           ),
+          SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+            onPressed: () => dateProvider.showDatePickerDialog(context),
+            child: Text(
+              'Select Date',
+              style: GoogleFonts.roboto(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Colors.green, // Change the background color to green
+              padding: EdgeInsets.symmetric(
+                  horizontal: 50, vertical: 12), // Increase the button size
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)), // Round the corners
+              elevation: 5, // Add a shadow
+            ),
+          )
         ]),
         actions: [
           //save button
 
           MaterialButton(
             onPressed: save,
-            child: Text('Save'),
+            child: Text(
+              'Save',
+              style: GoogleFonts.roboto(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
           ),
 
           //cancel button
           MaterialButton(
             onPressed: cancel,
-            child: Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.roboto(
+                  fontSize: 18, fontWeight: FontWeight.w600, color: Colors.red),
+            ),
           )
         ],
       ),
@@ -73,17 +120,25 @@ class _HomepageState extends State<Homepage> {
     Provider.of<ExpenseData>(context, listen: false).deleteExpense(expense);
   }
 
-  // void editExpense(ExpenseItem expense, Function() addNewExpense) {}
-
-  //if error remove from here to save edited expense
   void editExpense(ExpenseItem expense, Function() addNewExpense) {
+    final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
+    // final currentTheme = Provider.of<ThemeProvider>(context, listen: false);
+    // final currentThemeMode = currentTheme.currentThemeMode;
+
     newExpenseNameContorller.text = expense.name;
     newExpenseAmountContorller.text = expense.amount;
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Expense'),
+        title: Text(
+          'Edit Expense',
+          style: GoogleFonts.roboto(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -99,6 +154,30 @@ class _HomepageState extends State<Homepage> {
               decoration: const InputDecoration(hintText: "Expense Amount"),
               keyboardType: TextInputType.number,
             ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () => dateProvider.showDatePickerDialog(context),
+              child: Text(
+                'Select Date',
+                style: GoogleFonts.roboto(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Colors.green, // Change the background color to green
+                padding: EdgeInsets.symmetric(
+                    horizontal: 50, vertical: 12), // Increase the button size
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(12)), // Round the corners
+                elevation: 5, // Add a shadow
+              ),
+            )
           ],
         ),
         actions: [
@@ -109,13 +188,24 @@ class _HomepageState extends State<Homepage> {
               Navigator.pop(context);
               clear();
             },
-            child: Text('Save'),
+            child: Text(
+              'Save',
+              style: GoogleFonts.roboto(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
           ),
 
           // cancel button
           MaterialButton(
             onPressed: cancel,
-            child: Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.roboto(
+                  fontSize: 18, fontWeight: FontWeight.w600, color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -123,11 +213,16 @@ class _HomepageState extends State<Homepage> {
   }
 
   void saveEditedExpense(ExpenseItem originalExpense) {
+    final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
+    // Use the current date if dateSelected is false, else use the selectedDate
+    final selectedDate =
+        dateProvider.dateSelected ? dateProvider.selectedDate : DateTime.now();
     if (newExpenseNameContorller.text.isNotEmpty &&
         newExpenseAmountContorller.text.isNotEmpty) {
       final editedExpense = originalExpense.copyWith(
         name: newExpenseNameContorller.text,
         amount: newExpenseAmountContorller.text,
+        dateTime: selectedDate,
       );
       Provider.of<ExpenseData>(context, listen: false)
           .editExpense(originalExpense, () => editedExpense);
@@ -137,11 +232,17 @@ class _HomepageState extends State<Homepage> {
         body:
             '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
       );
+      dateProvider.clearDate();
     }
   }
 
 //save
   void save() {
+    final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
+    // Use the current date if dateSelected is false, else use the selectedDate
+    final selectedDate =
+        dateProvider.dateSelected ? dateProvider.selectedDate : DateTime.now();
+
     //only save if all fields are filled
     if (newExpenseNameContorller.text.isNotEmpty &&
         newExpenseAmountContorller.text.isNotEmpty) {
@@ -149,9 +250,10 @@ class _HomepageState extends State<Homepage> {
       ExpenseItem newExpense = ExpenseItem(
         name: newExpenseNameContorller.text,
         amount: newExpenseAmountContorller.text,
-        dateTime: DateTime.now(),
+        dateTime: selectedDate, //DateTime.now(),
         id: '',
       );
+
       Provider.of<NotificationProvider>(context, listen: false)
           .showNotification(
         title: 'Added New expense ${newExpenseNameContorller.text}\n',
@@ -161,6 +263,8 @@ class _HomepageState extends State<Homepage> {
       Provider.of<ExpenseData>(context, listen: false)
           .addNewExpense(newExpense);
       Navigator.pop(context);
+      // Clear the selectedDate in the DateProvider after saving the new expense
+      dateProvider.clearDate();
       clear();
     }
   }
@@ -179,21 +283,28 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
-    //final notificationProvider = Provider.of<NotificationProvider>(context);
-    final currentTheme = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = currentTheme.currentThemeMode;
+
+    // final currentTheme = Provider.of<ThemeProvider>(context);
+    // final currentThemeMode = currentTheme.currentThemeMode;
     userDetailsProvider.loadUserProfile();
     return Consumer<ExpenseData>(
         builder: (context, value, child) => Scaffold(
-            backgroundColor: currentThemeMode == ThemeMode.light
-                ? Colors.grey.shade300
-                : Colors.black45,
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: currentThemeMode == ThemeMode.light
-                  ? Colors.black
-                  : Colors.amber.shade700,
-              onPressed: addNewExpense,
-              child: const Icon(Icons.add),
+            backgroundColor: Theme.of(context).colorScheme.background,
+            floatingActionButton: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: FloatingActionButton(
+                  backgroundColor: Theme.of(context)
+                      .floatingActionButtonTheme
+                      .backgroundColor,
+                  onPressed: addNewExpense,
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
             body: ListView(
               children: [
@@ -203,12 +314,7 @@ class _HomepageState extends State<Homepage> {
                       Expanded(
                         child: Text(
                           ' Hey ${userDetailsProvider.nameController.text}',
-                          style: GoogleFonts.roboto(
-                              color: currentThemeMode == ThemeMode.light
-                                  ? Colors.black
-                                  : Colors.white,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500),
+                          style: Theme.of(context).textTheme.displayLarge,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
@@ -218,9 +324,7 @@ class _HomepageState extends State<Homepage> {
                           IconButton(
                             icon: Icon(
                               Icons.search,
-                              color: currentThemeMode == ThemeMode.light
-                                  ? Colors.black
-                                  : Colors.white,
+                              color: Theme.of(context).colorScheme.primary,
                               size: 35,
                             ),
                             onPressed: () {
@@ -230,9 +334,7 @@ class _HomepageState extends State<Homepage> {
                           IconButton(
                             icon: Icon(
                               Icons.notifications,
-                              color: currentThemeMode == ThemeMode.light
-                                  ? Colors.black
-                                  : Colors.white,
+                              color: Theme.of(context).colorScheme.primary,
                               size: 35,
                             ),
                             onPressed: () {
@@ -253,19 +355,24 @@ class _HomepageState extends State<Homepage> {
                 ),
                 //expense list
                 ListView.builder(
-                    shrinkWrap: true,
-                    reverse: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: value.getAllexpenselist().length,
-                    itemBuilder: (context, index) => ExpenseTile(
-                          name: value.getAllexpenselist()[index].name,
-                          amount: value.getAllexpenselist()[index].amount,
-                          dateTime: value.getAllexpenselist()[index].dateTime,
-                          deleteTapped: (p0) =>
-                              delete(value.getAllexpenselist()[index]),
-                          editTapped: (p0) => editExpense(
-                              value.getAllexpenselist()[index], addNewExpense),
-                        )),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: value.getAllexpenselist().length,
+                  itemBuilder: (context, index) {
+                    // Sort the expenses list based on the dateTime property using Merge Sort
+                    final sortedExpenses = mergeSort(value.getAllexpenselist());
+
+                    final expense = sortedExpenses[index];
+
+                    return ExpenseTile(
+                      name: expense.name,
+                      amount: expense.amount,
+                      dateTime: expense.dateTime,
+                      deleteTapped: (p0) => delete(expense),
+                      editTapped: (p0) => editExpense(expense, addNewExpense),
+                    );
+                  },
+                )
               ],
             )));
   }

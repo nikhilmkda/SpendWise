@@ -9,20 +9,17 @@ import 'monthly_expense.dart';
 class MonthlyExpensePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = currentTheme.currentThemeMode;
     return Scaffold(
-      backgroundColor: currentThemeMode == ThemeMode.light
-          ? Colors.grey.shade300
-          : Colors.black,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Consumer<ExpenseData>(
         builder: (context, expenseData, _) {
           // Calculate weekly expense summaries
           Map<String, double> monthlyExpenses =
               expenseData.calculateMonthlyExpenseSummary();
 
-          // Reverse the order of the weeklyExpenses map
-          List<String> months = monthlyExpenses.keys.toList().reversed.toList();
+          List<String> months = monthlyExpenses.keys.toList();
+//sort the months according to date
+          months.sort((a, b) => a.compareTo(b));
 
           return Column(
             children: [
@@ -45,11 +42,20 @@ class MonthlyExpensePage extends StatelessWidget {
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
-                            colors: [Colors.white, Colors.white30],
+                            colors: [
+                              Theme.of(context).colorScheme.background,
+                              Theme.of(context)
+                                  .colorScheme
+                                  .background
+                                  .withOpacity(0.6)
+                            ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.2),
                               offset: Offset(2, 2),
                               blurRadius: 4,
                               spreadRadius: 1,
@@ -65,14 +71,14 @@ class MonthlyExpensePage extends StatelessWidget {
                             style: GoogleFonts.nunito(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black),
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                           trailing: Text(
-                            '\$$totalExpense',
+                            '₹ $totalExpense',
                             style: GoogleFonts.lato(
                                 fontSize: 19,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                       ),

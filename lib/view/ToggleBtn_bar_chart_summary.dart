@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
 
 import '../controller/change theme/theme_provider.dart';
-import 'monthly/monthly_expense.dart';
+
 import 'monthly/monthly_expense_tile.dart';
 
 class BarChartSummary extends StatefulWidget {
@@ -20,24 +20,21 @@ class BarChartSummary extends StatefulWidget {
 class _BarChartSummaryState extends State<BarChartSummary> {
   var _tabTextIndexSelected = 1;
 
-  final _listTextTabToggle = ["Weekly", "Monthly", "Yearly"];
+  final _listTextTabToggle = ["Weekly", "Monthly"];
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Provider.of<ThemeProvider>(context);
-    final currentThemeMode = currentTheme.currentThemeMode;
+    // final currentTheme = Provider.of<ThemeProvider>(context);
+    // final currentThemeMode = currentTheme.currentThemeMode;
     return Consumer<ExpenseData>(
       builder: (context, expenseData, _) {
         final List<Widget> pages = [
           WeeklyExpensePage(),
           MonthlyExpensePage(),
-          MonthlyExpenseSummary(startOfMonth: expenseData.startOfMonthDate()),
         ];
 
         return Scaffold(
-          backgroundColor: currentThemeMode == ThemeMode.light
-              ? Colors.grey.shade300
-              : Colors.black,
+          backgroundColor: Theme.of(context).colorScheme.background,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
