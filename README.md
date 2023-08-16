@@ -23,7 +23,3 @@ This app is built using the Flutter framework, and the following packages are us
 - `fl_chart`: For creating interactive charts and graphs.
 - `image_picker`: For selecting images from the device's camera or gallery.
 
-## Screenshots
-
-### Home Screen
-<img src-"homepage.jpg" width-400px>
