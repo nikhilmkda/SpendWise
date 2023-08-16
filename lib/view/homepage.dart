@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_personal_expense_app/view/weekly/weekly_expense_summary.dart';
 import 'package:flutter_application_personal_expense_app/view/expense_tile.dart';
 import 'package:flutter_application_personal_expense_app/controller/components/expense.dart';
-import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
+import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/change theme/theme_provider.dart';
 import '../controller/date_picker/date_pick_provider.dart';
 import '../controller/merge_sort.dart';
 import '../controller/notification_provider.dart';
@@ -20,7 +20,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-//text controllers
+  // Declare text controllers for new expense inputs
   final newExpenseNameContorller = TextEditingController();
   final newExpenseAmountContorller = TextEditingController();
 
@@ -32,15 +32,17 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  //add new expense
+  // Function to show the new expense dialog
   void addNewExpense() {
+    // Get the DatePickProvider instance
     final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
-    // final currentTheme = Provider.of<ThemeProvider>(context, listen: false);
-    // final currentThemeMode = currentTheme.currentThemeMode;
-
+    // Close the search bar if open and dispose of the controller
+    Provider.of<ExpenseData>(context, listen: false).handleSearchEnd();
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        // Dialog title
         title: Text(
           'Add New Expense',
           style: GoogleFonts.roboto(
@@ -49,22 +51,22 @@ class _HomepageState extends State<Homepage> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
+        // Dialog content
         content: Column(mainAxisSize: MainAxisSize.min, children: [
-          //expense name
+          // Expense name input
           TextField(
             controller: newExpenseNameContorller,
             decoration: const InputDecoration(hintText: "Expense Name"),
             keyboardType: TextInputType.name,
           ),
-          //expense amount
+          // Expense amount input
           TextField(
             controller: newExpenseAmountContorller,
             decoration: const InputDecoration(hintText: "Expense Amount"),
             keyboardType: TextInputType.number,
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20),
+          // Select date button
           ElevatedButton(
             onPressed: () => dateProvider.showDatePickerDialog(context),
             child: Text(
@@ -75,20 +77,18 @@ class _HomepageState extends State<Homepage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            // Button styling
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Colors.green, // Change the background color to green
-              padding: EdgeInsets.symmetric(
-                  horizontal: 50, vertical: 12), // Increase the button size
+              backgroundColor: Colors.green,
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)), // Round the corners
-              elevation: 5, // Add a shadow
+                  borderRadius: BorderRadius.circular(12)),
+              elevation: 5,
             ),
           )
         ]),
         actions: [
-          //save button
-
+          // Save button
           MaterialButton(
             onPressed: save,
             child: Text(
@@ -100,8 +100,7 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           ),
-
-          //cancel button
+          // Cancel button
           MaterialButton(
             onPressed: cancel,
             child: Text(
@@ -114,23 +113,22 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
-  //delete
 
+  // Function to delete an expense
   void delete(ExpenseItem expense) {
     Provider.of<ExpenseData>(context, listen: false).deleteExpense(expense);
   }
 
+  // Function to show the edit expense dialog
   void editExpense(ExpenseItem expense, Function() addNewExpense) {
     final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
-    // final currentTheme = Provider.of<ThemeProvider>(context, listen: false);
-    // final currentThemeMode = currentTheme.currentThemeMode;
-
     newExpenseNameContorller.text = expense.name;
     newExpenseAmountContorller.text = expense.amount;
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        // Dialog title
         title: Text(
           'Edit Expense',
           style: GoogleFonts.roboto(
@@ -139,24 +137,24 @@ class _HomepageState extends State<Homepage> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
+        // Dialog content
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // expense name
+            // Expense name input
             TextField(
               controller: newExpenseNameContorller,
               decoration: const InputDecoration(hintText: "Expense Name"),
               keyboardType: TextInputType.name,
             ),
-            // expense amount
+            // Expense amount input
             TextField(
               controller: newExpenseAmountContorller,
               decoration: const InputDecoration(hintText: "Expense Amount"),
               keyboardType: TextInputType.number,
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
+            // Select date button
             ElevatedButton(
               onPressed: () => dateProvider.showDatePickerDialog(context),
               child: Text(
@@ -167,21 +165,19 @@ class _HomepageState extends State<Homepage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              // Button styling
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Colors.green, // Change the background color to green
-                padding: EdgeInsets.symmetric(
-                    horizontal: 50, vertical: 12), // Increase the button size
+                backgroundColor: Colors.green,
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
                 shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(12)), // Round the corners
-                elevation: 5, // Add a shadow
+                    borderRadius: BorderRadius.circular(12)),
+                elevation: 5,
               ),
             )
           ],
         ),
         actions: [
-          // save button
+          // Save button
           MaterialButton(
             onPressed: () {
               saveEditedExpense(expense);
@@ -197,8 +193,7 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           ),
-
-          // cancel button
+          // Cancel button
           MaterialButton(
             onPressed: cancel,
             child: Text(
@@ -212,9 +207,9 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  // Function to save edited expense
   void saveEditedExpense(ExpenseItem originalExpense) {
     final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
-    // Use the current date if dateSelected is false, else use the selectedDate
     final selectedDate =
         dateProvider.dateSelected ? dateProvider.selectedDate : DateTime.now();
     if (newExpenseNameContorller.text.isNotEmpty &&
@@ -229,52 +224,45 @@ class _HomepageState extends State<Homepage> {
       Provider.of<NotificationProvider>(context, listen: false)
           .showNotification(
         title: 'Edited ${newExpenseNameContorller.text} expense\n',
-        body:
-            '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
+        body: '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
       );
       dateProvider.clearDate();
     }
   }
 
-//save
+  // Function to save new expense
   void save() {
     final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
-    // Use the current date if dateSelected is false, else use the selectedDate
     final selectedDate =
         dateProvider.dateSelected ? dateProvider.selectedDate : DateTime.now();
-
-    //only save if all fields are filled
     if (newExpenseNameContorller.text.isNotEmpty &&
         newExpenseAmountContorller.text.isNotEmpty) {
-      //create expense item
       ExpenseItem newExpense = ExpenseItem(
         name: newExpenseNameContorller.text,
         amount: newExpenseAmountContorller.text,
-        dateTime: selectedDate, //DateTime.now(),
+        dateTime: selectedDate,
         id: '',
       );
-
       Provider.of<NotificationProvider>(context, listen: false)
           .showNotification(
         title: 'Added New expense ${newExpenseNameContorller.text}\n',
-        body:
-            '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
+        body: '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
       );
       Provider.of<ExpenseData>(context, listen: false)
           .addNewExpense(newExpense);
       Navigator.pop(context);
-      // Clear the selectedDate in the DateProvider after saving the new expense
       dateProvider.clearDate();
       clear();
     }
   }
 
-  //cancel
+  // Function to cancel the dialog
   void cancel() {
     Navigator.pop(context);
     clear();
   }
 
+  // Function to clear input fields
   void clear() {
     newExpenseAmountContorller.clear();
     newExpenseNameContorller.clear();
@@ -284,8 +272,6 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
 
-    // final currentTheme = Provider.of<ThemeProvider>(context);
-    // final currentThemeMode = currentTheme.currentThemeMode;
     userDetailsProvider.loadUserProfile();
     return Consumer<ExpenseData>(
         builder: (context, value, child) => Scaffold(
@@ -306,18 +292,31 @@ class _HomepageState extends State<Homepage> {
                 ),
               ),
             ),
-            body: ListView(
-              children: [
-                Row(
+            body: Padding(
+              padding: const EdgeInsets.only(left: 8, right: 8),
+              child: ListView(
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(
-                          ' Hey ${userDetailsProvider.nameController.text}',
-                          style: Theme.of(context).textTheme.displayLarge,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
+                        child: value.isSearching
+                            ? Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: TextField(
+                                  controller: value.searchController,
+                                  decoration: InputDecoration(
+                                    hintText: "Search...",
+                                  ),
+                                  onChanged: (query) {},
+                                ),
+                              )
+                            : Text(
+                                ' Hey ${userDetailsProvider.nameController.text}',
+                                style: Theme.of(context).textTheme.displayLarge,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
                       ),
                       Row(
                         children: [
@@ -328,7 +327,11 @@ class _HomepageState extends State<Homepage> {
                               size: 35,
                             ),
                             onPressed: () {
-                              // Add your search button functionality here
+                              if (value.isSearching) {
+                                value.handleSearchEnd();
+                              } else {
+                                value.handleSearchStart();
+                              }
                             },
                           ),
                           IconButton(
@@ -343,37 +346,89 @@ class _HomepageState extends State<Homepage> {
                           ),
                         ],
                       ),
-                    ]),
-                const SizedBox(
-                  height: 20,
-                ),
-                //weekly summmery
-                ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // Weekly summary widget
+                  ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 
-                const SizedBox(
-                  height: 20,
-                ),
-                //expense list
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: value.getAllexpenselist().length,
-                  itemBuilder: (context, index) {
-                    // Sort the expenses list based on the dateTime property using Merge Sort
-                    final sortedExpenses = mergeSort(value.getAllexpenselist());
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // Show appropriate content based on search and expense list
+                  if (value.isSearching &&
+                      value.searchExpenses(value.searchController.text).isEmpty)
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            "No search results found. ",
+                            style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                              height: 250,
+                              width: 250,
+                              child: Image.asset('assets/noresult.png')),
+                        ],
+                      ),
+                    )
+                  else if (!value.isSearching &&
+                      value.getAllexpenselist().isEmpty)
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Add your first expense  ",
+                            style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                              height: 250,
+                              width: 250,
+                              child: Image.asset('assets/addExpense.png')),
+                        ],
+                      ),
+                    )
+                  else
+                    // Display the list of expenses
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: value.isSearching
+                          ? value
+                              .searchExpenses(value.searchController.text)
+                              .length
+                          : value.getAllexpenselist().length,
+                      itemBuilder: (context, index) {
+                        final sortedExpenses =
+                            mergeSort(value.getAllexpenselist());
 
-                    final expense = sortedExpenses[index];
+                        final expense = value.isSearching
+                            ? value.searchExpenses(
+                                value.searchController.text)[index]
+                            : sortedExpenses[index];
 
-                    return ExpenseTile(
-                      name: expense.name,
-                      amount: expense.amount,
-                      dateTime: expense.dateTime,
-                      deleteTapped: (p0) => delete(expense),
-                      editTapped: (p0) => editExpense(expense, addNewExpense),
-                    );
-                  },
-                )
-              ],
+                        return ExpenseTile(
+                          name: expense.name,
+                          amount: expense.amount,
+                          dateTime: expense.dateTime,
+                          deleteTapped: (p0) => delete(expense),
+                          editTapped: (p0) =>
+                              editExpense(expense, addNewExpense),
+                        );
+                      },
+                    )
+                ],
+              ),
             )));
   }
 }

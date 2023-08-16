@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controller/change theme/theme_provider.dart';
-import 'theme_switch.dart';
 import '../controller/user_provider/user_provider.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -26,16 +24,14 @@ class UserProfilePageState extends State<UserProfilePage> {
   @override
   void initState() {
     super.initState();
+    // Load user profile data when the page is initialized
     Provider.of<UserDetailsProvider>(context, listen: false).loadUserProfile();
   }
 
+  @override
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
 
-    // final currentTheme = Provider.of<ThemeProvider>(context);
-    // final currentThemeMode = currentTheme.currentThemeMode;
-
-    // userDetailsProvider.loadUserProfile();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -48,6 +44,7 @@ class UserProfilePageState extends State<UserProfilePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              // User profile image section
               Stack(
                 children: [
                   CircleAvatar(
@@ -69,6 +66,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                         onPressed: () {
+                          // Open image selection from device
                           userDetailsProvider.selectImageFromDevice(context);
                         },
                       ),
@@ -76,7 +74,8 @@ class UserProfilePageState extends State<UserProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 25.0),
+              SizedBox(height: 100.0),
+              // User name input
               SizedBox(
                 height: 55,
                 child: TextFormField(
@@ -99,11 +98,11 @@ class UserProfilePageState extends State<UserProfilePage> {
                         color: Colors.green,
                       ),
                     ),
-                    // Reset error text if the field is not empty
                   ),
                 ),
               ),
               const SizedBox(height: 16.0),
+              // User email input
               SizedBox(
                 height: 55,
                 child: TextFormField(
@@ -130,6 +129,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                 ),
               ),
               SizedBox(height: 16.0),
+              // User phone number input
               SizedBox(
                 height: 55,
                 child: TextFormField(
@@ -157,6 +157,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                 ),
               ),
               SizedBox(height: 16.0),
+              // Save profile button
               ElevatedButton(
                 onPressed: () {
                   if (userDetailsProvider.nameController.text.isEmpty ||
@@ -223,7 +224,6 @@ class UserProfilePageState extends State<UserProfilePage> {
               SizedBox(
                 height: 20,
               ),
-              ThemeSwitchButton()
             ],
           ),
         ),

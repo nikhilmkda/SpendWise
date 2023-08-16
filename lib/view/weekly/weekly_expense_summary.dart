@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_personal_expense_app/bar_graph/my_bargraph.dart';
 import 'package:flutter_application_personal_expense_app/datetime/date_time_helper.dart';
-import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
+import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 

@@ -4,9 +4,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter_toggle_tab/helper.dart';
 
 import 'package:provider/provider.dart';
-import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
-
-import '../controller/change theme/theme_provider.dart';
+import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 
 import 'monthly/monthly_expense_tile.dart';
 
@@ -18,19 +16,17 @@ class BarChartSummary extends StatefulWidget {
 }
 
 class _BarChartSummaryState extends State<BarChartSummary> {
-  var _tabTextIndexSelected = 1;
+  var _tabTextIndexSelected = 1; // Default selected tab index
 
-  final _listTextTabToggle = ["Weekly", "Monthly"];
+  final _listTextTabToggle = ["Weekly", "Monthly"]; // Tab labels
 
   @override
   Widget build(BuildContext context) {
-    // final currentTheme = Provider.of<ThemeProvider>(context);
-    // final currentThemeMode = currentTheme.currentThemeMode;
     return Consumer<ExpenseData>(
       builder: (context, expenseData, _) {
         final List<Widget> pages = [
-          WeeklyExpensePage(),
-          MonthlyExpensePage(),
+          WeeklyExpensePage(), // Weekly expenses page
+          MonthlyExpensePage(), // Monthly expenses page
         ];
 
         return Scaffold(
@@ -65,9 +61,9 @@ class _BarChartSummaryState extends State<BarChartSummary> {
                       fontWeight: FontWeight.w700),
                   unSelectedTextStyle: const TextStyle(
                       color: Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                  labels: _listTextTabToggle,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700),
+                  labels: _listTextTabToggle, // Tab labels
                   selectedLabelIndex: (index) {
                     setState(() {
                       _tabTextIndexSelected = index;
@@ -76,11 +72,8 @@ class _BarChartSummaryState extends State<BarChartSummary> {
                   isScroll: false,
                 ),
               ),
-              // SizedBox(
-              //   height: heightInPercent(18, context),  // this gives the space to show the weekly bar graph
-              // ),
               Expanded(
-                child: pages[_tabTextIndexSelected],
+                child: pages[_tabTextIndexSelected], // Display selected page based on tab index
               ),
             ],
           ),

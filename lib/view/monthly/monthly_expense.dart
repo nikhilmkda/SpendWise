@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_personal_expense_app/datetime/date_time_helper.dart';
-import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
+import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -141,7 +140,8 @@ class MonthlyExpenseSummary extends StatelessWidget {
                       SizedBox(
                         height: 150,
                         child: MyBarGraphMonthly(
-                          maxY: calculateTotal(value),
+                          maxY: calculateMaxMonth(value, jan, feb, mar, apr,
+                              may, jun, jul, aug, sep, oct, nov, dec),
                           janAmount: monthlyExpenses[jan] ?? 0,
                           febAmount: monthlyExpenses[feb] ?? 0,
                           marAmount: monthlyExpenses[mar] ?? 0,

@@ -4,7 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
+import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 
 import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -75,19 +75,19 @@ class MyApp extends StatelessWidget {
         darkTheme: darkTheme,
         themeMode: Provider.of<ThemeProvider>(context).currentThemeMode,
         home: Scaffold(
-          //backgroundColor: Colors.grey.shade300,
           bottomNavigationBar: Consumer<TabProvider>(
             builder: (context, tabProvider, _) => Padding(
               padding: const EdgeInsets.only(bottom: 0, left: 0, right: 0),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5),
-                    topRight: Radius.circular(5),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(0),
                     bottomLeft: Radius.circular(0),
                     bottomRight: Radius.circular(0),
                   ),
-                  color: Theme.of(context).colorScheme.secondary,
+                  color:
+                      Theme.of(context).colorScheme.background.withOpacity(0.8),
                 ),
                 child: Padding(
                   padding:
@@ -130,6 +130,9 @@ class MyApp extends StatelessWidget {
                     selectedIndex: tabProvider.currentIndex,
                     onTabChange: (index) {
                       tabProvider.changeTabIndex(index);
+
+                      // Call handleSearchEnd when the tab changes
+                      context.read<ExpenseData>().handleSearchEnd();
                     },
                   ),
                 ),

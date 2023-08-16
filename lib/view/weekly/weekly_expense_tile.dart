@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_application_personal_expense_app/controller/expense_data.dart';
+import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 
-import '../../controller/change theme/theme_provider.dart';
 import 'weekly_expense_summary.dart';
 
 class WeeklyExpensePage extends StatelessWidget {

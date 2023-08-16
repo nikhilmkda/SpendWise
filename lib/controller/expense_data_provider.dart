@@ -3,10 +3,39 @@ import 'package:flutter_application_personal_expense_app/data/hive_database.dart
 import 'package:flutter_application_personal_expense_app/datetime/date_time_helper.dart';
 import 'package:flutter_application_personal_expense_app/controller/components/expense.dart';
 
+import 'merge_sort.dart';
+
 class ExpenseData extends ChangeNotifier {
   //list of all expense
 
   List<ExpenseItem> overallexpenseList = [];
+
+  List<ExpenseItem> searchExpenses(String query) {
+    return mergeSort(getAllexpenselist()).where((expense) {
+      return expense.name.toLowerCase().contains(query.toLowerCase()) ||
+          expense.amount.toLowerCase().contains(query.toLowerCase()) ||
+          expense.dateTime
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase());
+    }).toList();
+  }
+
+  bool isSearching = false;
+
+  final TextEditingController searchController = new TextEditingController();
+
+  void handleSearchStart() {
+    isSearching = true;
+    notifyListeners();
+  }
+
+  void handleSearchEnd() {
+    isSearching = false;
+    searchController.clear();
+    
+    notifyListeners();
+  }
 
   //get expense list
 
