@@ -22,3 +22,8 @@ This app is built using the Flutter framework, and the following packages are us
 - `google_fonts`: For using custom fonts in the app's UI.
 - `fl_chart`: For creating interactive charts and graphs.
 - `image_picker`: For selecting images from the device's camera or gallery.
+
+## Screenshots
+
+### Home Screen
+![Home Screen](https://github.com/nikhilmkda/personal_expense_App/blob/main/homepage.jpg)
