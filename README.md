@@ -26,4 +26,4 @@ This app is built using the Flutter framework, and the following packages are us
 ## Screenshots
 
 ### Home Screen
-![Home Screen](https://github.com/nikhilmkda/personal_expense_App/blob/main/homepage.jpg)
+<img src-"homepage.jpg" width-400px>
