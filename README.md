@@ -4,11 +4,13 @@ The **Personal Expense App** is a mobile application built with Flutter that hel
 
 ## Features
 
-- **Expense Tracking:** Keep track of your daily expenses by entering expense details such as name, amount, and date.
-- **Expense Summary:** View summary reports of your expenses, including weekly, monthly, and category-wise breakdowns.
-- **Profile Management:** Customize your user profile by adding your name, email, phone number, and profile picture.
-- **Theme Options:** Choose between light and dark themes to customize the app's appearance.
-- **Data Persistence:** All your expense and user profile data is stored using Hive, a lightweight NoSQL database.
+- Add new expenses with details like name, amount, and date.
+- Edit and delete existing expenses.
+- Search and filter expenses by name, amount, or date.
+- View weekly, monthly, and daily expense summaries.
+- Visualize expenses using bar graphs and charts.
+- Toggle between light and dark themes.
+- Set user profile details and profile picture.
 
 ## Technologies and Packages Used
 
