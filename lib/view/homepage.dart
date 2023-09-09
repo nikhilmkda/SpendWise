@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_personal_expense_app/view/weekly/weekly_expense_summary.dart';
 import 'package:flutter_application_personal_expense_app/view/expense_tile.dart';
 import 'package:flutter_application_personal_expense_app/controller/components/expense.dart';
@@ -38,7 +37,7 @@ class _HomepageState extends State<Homepage> {
     final dateProvider = Provider.of<DatePickProvider>(context, listen: false);
     // Close the search bar if open and dispose of the controller
     Provider.of<ExpenseData>(context, listen: false).handleSearchEnd();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -224,7 +223,8 @@ class _HomepageState extends State<Homepage> {
       Provider.of<NotificationProvider>(context, listen: false)
           .showNotification(
         title: 'Edited ${newExpenseNameContorller.text} expense\n',
-        body: '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
+        body:
+            '${newExpenseNameContorller.text} = ₹ ${newExpenseAmountContorller.text} ',
       );
       dateProvider.clearDate();
     }
@@ -246,7 +246,8 @@ class _HomepageState extends State<Homepage> {
       Provider.of<NotificationProvider>(context, listen: false)
           .showNotification(
         title: 'Added New expense ${newExpenseNameContorller.text}\n',
-        body: '${newExpenseNameContorller.text} =  \$ ${newExpenseAmountContorller.text} ',
+        body:
+            '${newExpenseNameContorller.text} =  ₹ ${newExpenseAmountContorller.text} ',
       );
       Provider.of<ExpenseData>(context, listen: false)
           .addNewExpense(newExpense);

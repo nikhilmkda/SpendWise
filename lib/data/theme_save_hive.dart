@@ -10,6 +10,12 @@ class ThemeStorage {
 
   Future<ThemeMode> loadThemeMode() async {
     final themeBox = await Hive.openBox('themeBox');
+
+    if (themeBox.isEmpty) {
+      await themeBox.close();
+      return ThemeMode.dark; // Return the default dark theme mode
+    }
+
     final int themeModeIndex = themeBox.get('themeMode', defaultValue: 0);
     await themeBox.close();
     return ThemeMode.values[themeModeIndex];

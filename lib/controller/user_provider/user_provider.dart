@@ -34,17 +34,6 @@ class UserDetailsProvider with ChangeNotifier {
     };
     await userBox.put('userProfile', userProfile);
     userBox.close();
-
-    // Save the image path using shared_preferences
-    if (_image != null) {
-      final appDir = await getApplicationDocumentsDirectory();
-      final imagePath = appDir.path + '/profileImage.png';
-      _image!.copy(imagePath);
-
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('profileImagePath', imagePath);
-      print('Image path saved: $imagePath');
-    }
   }
 
   Future<void> loadUserProfile() async {
@@ -57,14 +46,6 @@ class UserDetailsProvider with ChangeNotifier {
       emailController.text = userProfile['email'];
       phoneController.text = userProfile['phone'];
 
-      notifyListeners();
-    }
-
-    // Load the image path using shared_preferences
-    final prefs = await SharedPreferences.getInstance();
-    final imagePath = prefs.getString('profileImagePath');
-    if (imagePath != null && imagePath.isNotEmpty) {
-      _image = File(imagePath);
       notifyListeners();
     }
   }

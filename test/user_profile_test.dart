@@ -1,68 +1,59 @@
-import 'package:flutter_application_personal_expense_app/controller/change%20theme/dark_theme.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_application_personal_expense_app/controller/change%20theme/dark_theme.dart';
+import 'package:flutter_application_personal_expense_app/controller/change%20theme/light_theme.dart';
+import 'package:flutter_application_personal_expense_app/controller/date_picker/date_pick_provider.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
-
-import 'package:hive/hive.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_application_personal_expense_app/controller/notification_provider.dart';
+import 'package:flutter_application_personal_expense_app/controller/tab_provider.dart';
+import 'package:flutter_application_personal_expense_app/controller/user_provider/user_provider.dart';
+import 'package:flutter_application_personal_expense_app/view/user_profile.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+class MockMethodChannel extends Mock implements MethodChannel {}
 
-import 'controller/change theme/light_theme.dart';
-import 'data/theme_save_hive.dart';
-import 'controller/date_picker/date_pick_provider.dart';
-import 'controller/notification_provider.dart';
-import 'controller/tab_provider.dart';
-import 'controller/change theme/theme_provider.dart';
-import 'controller/user_provider/user_provider.dart';
-
-void main() async {
-  //initialize hive
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
-  NotificationProvider().initializeNotifications();
-  await _requestNotificationPermission();
-  
-
-  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
-  Hive.init(appDocumentDir.path);
-
-  //open a hive box
-  await Hive.openBox('themeBox');
-  await Hive.openBox('expense_database');
-  await Hive.openBox('userProfileBox');
-
-  //Load the selected theme mode from the themeBox using ThemeStorage class
-  final themeStorage = ThemeStorage();
-  final ThemeMode initialThemeMode = await themeStorage.loadThemeMode();
-  
-
-  runApp(
-    ChangeNotifierProvider<ThemeProvider>(
-      create: (context) => ThemeProvider(initialThemeMode),
-      child: const MyApp(),
-    ),
-  );
-  FlutterNativeSplash.remove();
-}
-
-//request user to get notification permisssion
-Future<void> _requestNotificationPermission() async {
-  var status = await Permission.notification.status;
-  if (!status.isGranted) {
-    await Permission.notification.request();
-  }
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+class MockDirectory extends Mock implements Directory {
   @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
+  String toString() => '/mock/directory/path'; // Provide a mock directory path
+  String getNonNullPath() => '/mock/directory/path'; // Custom method to get non-nullable path
+}
+
+
+
+
+void main() {
+  late MockMethodChannel mockMethodChannel;
+
+    final String testName = 'John Doe';
+  final String testEmail = 'john.doe@example.com';
+  final String testPhone = '1234567890';
+ setUpAll(() async {
+    // Initialize Hive
+
+    // Create and configure the mock MethodChannel
+    mockMethodChannel = MockMethodChannel();
+    const MethodChannel('plugins.flutter.io/path_provider')
+        .setMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'getApplicationDocumentsDirectory') {
+        return '/mock/directory/path';
+      }
+      return null;
+    });
+
+    // Use the mock directory for Hive initialization
+   final MockDirectory mockDirectory = MockDirectory();
+    Hive.init(mockDirectory.getNonNullPath());
+  });
+
+
+Widget createwidgetundertest(){
+
+  return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ExpenseData()),
         ChangeNotifierProvider(create: (_) => TabProvider()),
@@ -75,7 +66,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        themeMode: Provider.of<ThemeProvider>(context).currentThemeMode,
+       
         home: Scaffold(
           bottomNavigationBar: Consumer<TabProvider>(
             builder: (context, tabProvider, _) => Padding(
@@ -141,12 +132,46 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          body: Consumer<TabProvider>(
-            builder: (context, tabProvider, _) =>
-                tabProvider.getCurrentScreen(),
-          ),
+          body: UserProfilePage(name: testName, email: testEmail, phone: testPhone, profileImage: ''),
         ),
-      ),
+      )
+      );
+}
+
+
+  testWidgets('Check app bar name', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(
+      createwidgetundertest()
     );
-  }
+
+    // Use the `find.text` method to locate the AppBar's title text.
+    final appBarTitle = find.text('User Profile');
+
+    // Expect that the app bar title text is found.
+    expect(appBarTitle, findsOneWidget);
+  });
+
+ testWidgets('Check user details', (WidgetTester tester) async {
+  // Build our app and trigger a frame.
+  await tester.pumpWidget(createwidgetundertest());
+
+  // Mock user details
+
+
+  // Set the user details in the UserDetailsProvider
+  final userDetailsProvider =
+      Provider.of<UserDetailsProvider>(tester.element(find.byType(UserProfilePage)), listen: false);
+  userDetailsProvider.nameController.text = testName;
+  userDetailsProvider.emailController.text = testEmail;
+  userDetailsProvider.phoneController.text = testPhone;
+
+  // Verify that the user details are displayed in the text fields
+  expect(find.text(testName), findsOneWidget);
+  expect(find.text(testEmail), findsOneWidget);
+  expect(find.text(testPhone), findsOneWidget);
+});
+
+
+  
 }
