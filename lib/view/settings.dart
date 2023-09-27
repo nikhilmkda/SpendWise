@@ -36,7 +36,7 @@ class Settings extends StatelessWidget {
                       children: [
                         TextSpan(
                           text:
-                              "App  made by Nikhil K, for effortlessly tracking and managing your expenses. Whether you're a meticulous budgeter or simply looking to gain better control over your spending, ExpenseTrack empowers you with intuitive features and insightful analysis tools to transform your financial management experience.\n \n",
+                              "App  made by NikhilzTechSolutions, for effortlessly tracking and managing your expenses. Whether you're a meticulous budgeter or simply looking to gain better control over your spending, SpendWise empowers you with intuitive features and insightful analysis tools to transform your financial management experience.\n \n",
                           style: GoogleFonts.roboto(
                             fontSize: 15,
                             color: Theme.of(context).colorScheme.secondary,
@@ -53,7 +53,7 @@ class Settings extends StatelessWidget {
                         ),
                         TextSpan(
                           text:
-                              "Local Data Storage: Your financial data is your business. ExpenseGuard prioritizes your privacy by securely storing your information locally on your device, ensuring that only you have access to your sensitive data.\n\n",
+                              "Local Data Storage: Your financial data is your business. SpendWise prioritizes your privacy by securely storing your information locally on your device, ensuring that only you have access to your sensitive data.\n\n",
                           style: GoogleFonts.roboto(
                             fontSize: 14,
                             color: Theme.of(context).colorScheme.secondary,
@@ -71,7 +71,7 @@ class Settings extends StatelessWidget {
                         ),
                         TextSpan(
                           text:
-                              "Swipe to Manage: Simplify expense management by swiping to delete or edit transactions. ExpenseGuard's intuitive swipe gestures make it quick and easy to maintain accurate records.\n\n",
+                              "Swipe to Manage: Simplify expense mCanagement by swiping to delete or edit transactions. SpendWise's intuitive swipe gestures make it quick and easy to maintain accurate records.\n\n",
                           style: GoogleFonts.roboto(
                             fontSize: 14,
                             color: Theme.of(context).colorScheme.secondary,
@@ -89,7 +89,16 @@ class Settings extends StatelessWidget {
                         ),
                         TextSpan(
                           text:
-                              "Smart Search: Easily find specific transactions with the smart search feature. Whether you're looking for a recent expense or an entry from months ago, ExpenseGuard helps you locate it with ease.\n\n",
+                              "Smart Search: Easily find specific transactions with the smart search feature. Whether you're looking for a recent expense or an entry from months ago, SpendWise helps you locate it with ease.\n\n",
+                          style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextSpan(
+                          text:
+                              "Your feedback is essential in shaping the future of our app. Whether you have a complaint or a suggestion, we're here to listen.\nContact Us via Email To share your suggestions or file a complaint, please reach out to us via email at: nikhilk9567@gmail.com.\nWe appreciate your feedback, and our team will respond to your email as soon as possible. Thank you for choosing SpendWise, and we look forward to hearing from you!",
                           style: GoogleFonts.roboto(
                             fontSize: 14,
                             color: Theme.of(context).colorScheme.secondary,

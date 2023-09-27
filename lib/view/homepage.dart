@@ -28,6 +28,8 @@ class _HomepageState extends State<Homepage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ExpenseData>(context, listen: false).prepareData();
+      Provider.of<UserDetailsProvider>(context, listen: false)
+          .loadUserProfile();
     });
   }
 
@@ -272,164 +274,169 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
+    final notificationProvider = Provider.of<NotificationProvider>(context);
 
-    userDetailsProvider.loadUserProfile();
-    return Consumer<ExpenseData>(
-        builder: (context, value, child) => Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.background,
-            floatingActionButton: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 50),
-                child: FloatingActionButton(
-                  backgroundColor: Theme.of(context)
-                      .floatingActionButtonTheme
-                      .backgroundColor,
-                  onPressed: addNewExpense,
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.black,
-                  ),
+    //  userDetailsProvider.loadUserProfile();
+    return Consumer<ExpenseData>(builder: (context, value, child) {
+      // Listen to changes in the search query
+      value.searchController.addListener(() {
+        // Update the search query in the ExpenseData class
+        value.updateSearchQuery(value.searchController.text);
+      });
+      final searchResults = value.searchExpenses(value.searchQuery);
+      return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          floatingActionButton: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 50),
+              child: FloatingActionButton(
+                backgroundColor:
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                onPressed: addNewExpense,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.black,
                 ),
               ),
             ),
-            body: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8),
-              child: ListView(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: value.isSearching
-                            ? Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: TextField(
-                                  controller: value.searchController,
-                                  decoration: InputDecoration(
-                                    hintText: "Search...",
-                                  ),
-                                  onChanged: (query) {},
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: ListView(
+              controller: value.scrollController,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: value.isSearching
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: TextField(
+                                controller: value.searchController,
+                                decoration: InputDecoration(
+                                  hintText: "Search...",
                                 ),
-                              )
-                            : Text(
-                                ' Hey ${userDetailsProvider.nameController.text}',
-                                style: Theme.of(context).textTheme.displayLarge,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                                onChanged: (query) {
+                                  value.searchExpenses(query);
+                                },
                               ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.search,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 35,
+                            )
+                          : Text(
+                              ' Hey ${userDetailsProvider.nameController.text}',
+                              style: Theme.of(context).textTheme.displayLarge,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
-                            onPressed: () {
-                              if (value.isSearching) {
-                                value.handleSearchEnd();
-                              } else {
-                                value.handleSearchStart();
-                              }
-                            },
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.search,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.notifications,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 35,
-                            ),
-                            onPressed: () {
-                              // Add your bell button functionality here
-                            },
+                          onPressed: () {
+                            if (value.isSearching) {
+                              value.handleSearchEnd();
+                            } else {
+                              value.handleSearchStart();
+                            }
+                          },
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              notificationProvider.showNoNewNotificationToast(),
+                          child: Icon(
+                            Icons.notifications,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 32,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  // Weekly summary widget
-                  ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // Weekly summary widget
+                ExpenseSummary(startOfWeek: value.startOfWeekDate()),
 
-                  const SizedBox(
-                    height: 20,
+                const SizedBox(
+                  height: 20,
+                ),
+                // Show appropriate content based on search and expense list
+                if (value.isSearching &&
+                    value.searchExpenses(value.searchController.text).isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          "No search results found. ",
+                          style: GoogleFonts.roboto(
+                            fontSize: 18,
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                            height: 250,
+                            width: 250,
+                            child: Image.asset('assets/noresult.png')),
+                      ],
+                    ),
+                  )
+                else if (!value.isSearching &&
+                    value.getAllexpenselist().isEmpty)
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          "Add your first expense  ",
+                          style: GoogleFonts.roboto(
+                            fontSize: 18,
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                            height: 250,
+                            width: 250,
+                            child: Image.asset('assets/addExpense.png')),
+                      ],
+                    ),
+                  )
+                else
+                  // Display the list of expenses
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: value.isSearching
+                        ? searchResults.length
+                        : value.getAllexpenselist().length,
+                    itemBuilder: (context, index) {
+                      final sortedExpenses =
+                          mergeSort(value.getAllexpenselist());
+
+                      final expense = value.isSearching
+                          ? searchResults[index]
+                          : sortedExpenses[index];
+
+                      return ExpenseTile(
+                        name: expense.name,
+                        amount: expense.amount,
+                        dateTime: expense.dateTime,
+                        deleteTapped: (p0) => delete(expense),
+                        editTapped: (p0) => editExpense(expense, addNewExpense),
+                      );
+                    },
                   ),
-                  // Show appropriate content based on search and expense list
-                  if (value.isSearching &&
-                      value.searchExpenses(value.searchController.text).isEmpty)
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            "No search results found. ",
-                            style: GoogleFonts.roboto(
-                              fontSize: 18,
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                              height: 250,
-                              width: 250,
-                              child: Image.asset('assets/noresult.png')),
-                        ],
-                      ),
-                    )
-                  else if (!value.isSearching &&
-                      value.getAllexpenselist().isEmpty)
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            "Add your first expense  ",
-                            style: GoogleFonts.roboto(
-                              fontSize: 18,
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                              height: 250,
-                              width: 250,
-                              child: Image.asset('assets/addExpense.png')),
-                        ],
-                      ),
-                    )
-                  else
-                    // Display the list of expenses
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: value.isSearching
-                          ? value
-                              .searchExpenses(value.searchController.text)
-                              .length
-                          : value.getAllexpenselist().length,
-                      itemBuilder: (context, index) {
-                        final sortedExpenses =
-                            mergeSort(value.getAllexpenselist());
-
-                        final expense = value.isSearching
-                            ? value.searchExpenses(
-                                value.searchController.text)[index]
-                            : sortedExpenses[index];
-
-                        return ExpenseTile(
-                          name: expense.name,
-                          amount: expense.amount,
-                          dateTime: expense.dateTime,
-                          deleteTapped: (p0) => delete(expense),
-                          editTapped: (p0) =>
-                              editExpense(expense, addNewExpense),
-                        );
-                      },
-                    )
-                ],
-              ),
-            )));
+              ],
+            ),
+          ));
+    });
   }
 }

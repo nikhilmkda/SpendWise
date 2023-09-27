@@ -17,15 +17,16 @@ import 'controller/notification_provider.dart';
 import 'controller/tab_provider.dart';
 import 'controller/change theme/theme_provider.dart';
 import 'controller/user_provider/user_provider.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
+
 
 void main() async {
   //initialize hive
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
+ tzdata.initializeTimeZones();
   NotificationProvider().initializeNotifications();
   await _requestNotificationPermission();
-  
 
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
@@ -38,7 +39,6 @@ void main() async {
   //Load the selected theme mode from the themeBox using ThemeStorage class
   final themeStorage = ThemeStorage();
   final ThemeMode initialThemeMode = await themeStorage.loadThemeMode();
-  
 
   runApp(
     ChangeNotifierProvider<ThemeProvider>(
@@ -112,6 +112,12 @@ class MyApp extends StatelessWidget {
                         icon: Icons.home,
                         text: 'Home',
                         iconColor: Theme.of(context).colorScheme.primary,
+                        onPressed: () {
+                          if (tabProvider.currentIndex == 0) {
+                            Provider.of<ExpenseData>(context, listen: false)
+                                .scrollToTop();
+                          }
+                        },
                       ),
                       GButton(
                         icon: Icons.person,

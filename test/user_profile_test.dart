@@ -132,7 +132,7 @@ Widget createwidgetundertest(){
               ),
             ),
           ),
-          body: UserProfilePage(name: testName, email: testEmail, phone: testPhone, profileImage: ''),
+          body: UserProfilePage(name: testName, email: testEmail, phone: testPhone, ),
         ),
       )
       );

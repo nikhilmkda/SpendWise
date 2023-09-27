@@ -7,8 +7,13 @@ import 'merge_sort.dart';
 
 class ExpenseData extends ChangeNotifier {
   //list of all expense
-
+  bool isSearching = false;
   List<ExpenseItem> overallexpenseList = [];
+  String _searchQuery = ''; // Variable to store the search query
+  String get searchQuery => _searchQuery;
+  final TextEditingController searchController = new TextEditingController();
+
+  final ScrollController scrollController = ScrollController();
 
   List<ExpenseItem> searchExpenses(String query) {
     return mergeSort(getAllexpenselist()).where((expense) {
@@ -21,19 +26,32 @@ class ExpenseData extends ChangeNotifier {
     }).toList();
   }
 
-  bool isSearching = false;
-
-  final TextEditingController searchController = new TextEditingController();
+  // Method to update the search query
+  void updateSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners(); // Notify listeners to trigger UI updates
+  }
 
   void handleSearchStart() {
     isSearching = true;
+
     notifyListeners();
   }
 
   void handleSearchEnd() {
     isSearching = false;
     searchController.clear();
-    
+
+    notifyListeners();
+  }
+
+  // Function to scroll to the top of the screen
+  void scrollToTop() {
+    scrollController.animateTo(
+      0.0, // Scroll to the top
+      duration: Duration(milliseconds: 500), // You can adjust the duration
+      curve: Curves.easeInOut, // You can adjust the curve
+    );
     notifyListeners();
   }
 
@@ -197,5 +215,13 @@ class ExpenseData extends ChangeNotifier {
     }
 
     return monthlyExpenseSummary;
+  }
+
+  @override
+  void dispose() {
+    // Dispose of controllers when they're no longer needed
+    searchController.dispose();
+    scrollController.dispose();
+    super.dispose();
   }
 }

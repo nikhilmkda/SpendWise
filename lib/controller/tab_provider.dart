@@ -31,7 +31,6 @@ class TabProvider with ChangeNotifier {
           email: '',
           name: '',
           phone: '',
-          profileImage: '',
         );
       case 2:
         return const BarChartSummary();

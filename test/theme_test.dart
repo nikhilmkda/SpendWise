@@ -10,7 +10,6 @@ import 'package:flutter_application_personal_expense_app/controller/notification
 import 'package:flutter_application_personal_expense_app/controller/tab_provider.dart';
 import 'package:flutter_application_personal_expense_app/controller/user_provider/user_provider.dart';
 import 'package:flutter_application_personal_expense_app/view/homepage.dart';
-import 'package:flutter_application_personal_expense_app/view/user_profile.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:mocktail/mocktail.dart';

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,13 +9,12 @@ class UserProfilePage extends StatefulWidget {
   final String name;
   final String email;
   final String phone;
-  final String profileImage;
+
   const UserProfilePage({
     Key? key,
     required this.name,
     required this.email,
     required this.phone,
-    required this.profileImage,
   }) : super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   void initState() {
     super.initState();
     // Load user profile data when the page is initialized
-    Provider.of<UserDetailsProvider>(context, listen: false).loadUserProfile();
+    // Provider.of<UserDetailsProvider>(context, listen: false).loadUserProfile();
   }
 
   @override
@@ -49,9 +50,10 @@ class UserProfilePageState extends State<UserProfilePage> {
                 children: [
                   CircleAvatar(
                     radius: 120,
-                    backgroundImage: userDetailsProvider.image != null
-                        ? FileImage(userDetailsProvider.image!)
-                        : null,
+                    backgroundImage: userDetailsProvider.imageBytes != null
+                        ? MemoryImage(userDetailsProvider.imageBytes!)
+                        : AssetImage('assets/userProfileImage.png')
+                            as ImageProvider,
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
                   Positioned(
@@ -59,7 +61,7 @@ class UserProfilePageState extends State<UserProfilePage> {
                     right: 10,
                     child: CircleAvatar(
                       radius: 25,
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.green,
                       child: IconButton(
                         icon: Icon(
                           Icons.camera_alt,
@@ -74,7 +76,17 @@ class UserProfilePageState extends State<UserProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 100.0),
+
+              SizedBox(height: 50.0),
+              if (userDetailsProvider.loadingFailed)
+                Text(
+                  'No user data found! Add details or reload the page.',
+                  style: TextStyle(
+                    color: Colors.red,
+                    // You can customize the style
+                  ),
+                ),
+              SizedBox(height: 50.0),
               // User name input
               SizedBox(
                 height: 55,

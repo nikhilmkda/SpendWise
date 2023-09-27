@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.flutter_application_personal_expense_app">
    <application
-        android:label="expense App Beta"
+        android:label="SpendWise"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/ic_launcher">
         
         <activity
             android:name=".MainActivity"

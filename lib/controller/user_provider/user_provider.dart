@@ -1,9 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../view/user_profile.dart';
 
@@ -14,15 +13,8 @@ class UserDetailsProvider with ChangeNotifier {
   File? _image;
 
   File? get image => _image;
-
-  UserProfilePage getUserProfile() {
-    return UserProfilePage(
-      name: nameController.text,
-      email: emailController.text,
-      phone: phoneController.text,
-      profileImage: _image != null ? _image!.path : '',
-    );
-  }
+  Uint8List? imageBytes;
+  bool loadingFailed = false;
 
   void saveUserProfile() async {
     // Save the user profile using Hive
@@ -31,9 +23,11 @@ class UserDetailsProvider with ChangeNotifier {
       'name': nameController.text,
       'email': emailController.text,
       'phone': phoneController.text,
+      'profileImageBytes': imageBytes != null ? imageBytes!.toList() : null,
     };
     await userBox.put('userProfile', userProfile);
     userBox.close();
+    notifyListeners();
   }
 
   Future<void> loadUserProfile() async {
@@ -46,9 +40,26 @@ class UserDetailsProvider with ChangeNotifier {
       emailController.text = userProfile['email'];
       phoneController.text = userProfile['phone'];
 
+      // Check if the 'profileImageBytes' key is present and not null
+      if (userProfile.containsKey('profileImageBytes') &&
+          userProfile['profileImageBytes'] != null) {
+        final imageUser = userProfile['profileImageBytes'] as List<int>;
+        imageBytes = Uint8List.fromList(imageUser);
+      } else {
+        // Handle the case when profile image is null or missing
+        imageBytes =
+            null; // Set imageBytes to null or provide a default image if needed
+      }
+
+      notifyListeners();
+    } else {
+      // Set loadingFailed to true when data loading fails
+      loadingFailed = true;
       notifyListeners();
     }
   }
+
+//show user data loading error in userdetails page
 
   Future<void> selectImageFromDevice(BuildContext context) async {
     final imageSource = await showDialog<ImageSource>(
@@ -73,6 +84,9 @@ class UserDetailsProvider with ChangeNotifier {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
 
+        // Convert the image to bytes (you can use a utility function for this)
+        imageBytes = await pickedFile.readAsBytes();
+        saveUserProfile(); //to save userprofilepic instantly after selecting
         notifyListeners();
       }
     }
