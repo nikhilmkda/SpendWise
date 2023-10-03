@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../view/user_profile.dart';
 
 class UserDetailsProvider with ChangeNotifier {
   TextEditingController nameController = TextEditingController();

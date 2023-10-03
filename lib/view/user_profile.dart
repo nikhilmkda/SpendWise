@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -78,7 +76,8 @@ class UserProfilePageState extends State<UserProfilePage> {
               ),
 
               SizedBox(height: 50.0),
-              if (userDetailsProvider.loadingFailed)
+              if (userDetailsProvider.loadingFailed &&
+                  userDetailsProvider.nameController.text.isEmpty)
                 Text(
                   'No user data found! Add details or reload the page.',
                   style: TextStyle(

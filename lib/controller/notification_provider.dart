@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationProvider with ChangeNotifier {
@@ -77,18 +77,5 @@ class NotificationProvider with ChangeNotifier {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-  }
-// if there is no notification present in bell icon in homepage
-  void showNoNewNotificationToast() {
-    Fluttertoast.showToast(
-      msg: "No new notifications",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-    notifyListeners();
   }
 }

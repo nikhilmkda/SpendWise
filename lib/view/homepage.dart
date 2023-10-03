@@ -274,7 +274,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
-    final notificationProvider = Provider.of<NotificationProvider>(context);
+  
 
     //  userDetailsProvider.loadUserProfile();
     return Consumer<ExpenseData>(builder: (context, value, child) {
@@ -330,32 +330,19 @@ class _HomepageState extends State<Homepage> {
                               maxLines: 1,
                             ),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.search,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 32,
-                          ),
-                          onPressed: () {
-                            if (value.isSearching) {
-                              value.handleSearchEnd();
-                            } else {
-                              value.handleSearchStart();
-                            }
-                          },
-                        ),
-                        GestureDetector(
-                          onTap: () =>
-                              notificationProvider.showNoNewNotificationToast(),
-                          child: Icon(
-                            Icons.notifications,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 32,
-                          ),
-                        ),
-                      ],
+                    IconButton(
+                      icon: Icon(
+                        Icons.search,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 32,
+                      ),
+                      onPressed: () {
+                        if (value.isSearching) {
+                          value.handleSearchEnd();
+                        } else {
+                          value.handleSearchStart();
+                        }
+                      },
                     ),
                   ],
                 ),

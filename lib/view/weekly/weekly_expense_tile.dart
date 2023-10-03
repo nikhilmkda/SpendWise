@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart'; // Import the intl package
 import 'package:provider/provider.dart';
 import 'package:flutter_application_personal_expense_app/controller/expense_data_provider.dart';
 
+import '../../datetime/date_time_helper.dart';
 import 'weekly_expense_summary.dart';
 
 class WeeklyExpensePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final currentTheme = Provider.of<ThemeProvider>(context);
-    // final currentThemeMode = currentTheme.currentThemeMode;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Consumer<ExpenseData>(
@@ -18,9 +18,14 @@ class WeeklyExpensePage extends StatelessWidget {
           Map<String, double> weeklyExpenses =
               expenseData.calculateWeeklyExpenseSummary();
 
-          // Reverse the order of the weeklyExpenses map
+          //converts the set of keys  of the 'weeklyExpenses' in a week into a list of strings
           List<String> weeks = weeklyExpenses.keys.toList();
-          weeks.sort((a, b) => a.compareTo(b));
+          // sorting of the weeks
+          weeks.sort((a, b) {
+            DateTime dateA = DateFormat('yyyy-MM-dd').parse(a);
+            DateTime dateB = DateFormat('yyyy-MM-dd').parse(b);
+            return dateB.compareTo(dateA);
+          });
 
           return ListView(
             children: [
@@ -28,16 +33,22 @@ class WeeklyExpensePage extends StatelessWidget {
                 height: 20,
               ),
 
-              //weekly graph
+              // Weekly graph
               ExpenseSummary(startOfWeek: expenseData.startOfWeekDate()),
               ListView.builder(
-                reverse: true,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: weeklyExpenses.length,
                 itemBuilder: (context, index) {
                   String week = weeks[index];
                   double totalExpense = weeklyExpenses[week] ?? 0.0;
+
+                  // Convert the week string to DateTime using your helper function
+                  DateTime weekDate = convertStringToDateTime(week);
+
+                  // Format the week string for display
+                  String formattedWeek =
+                      DateFormat('dd - MMM - y').format(weekDate);
 
                   return Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10),
@@ -73,9 +84,9 @@ class WeeklyExpensePage extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(vertical: 5),
                           child: ListTile(
                             title: Text(
-                              'Week of : ${week.substring(7)}${week.substring(4, 7)}${week.substring(0, 4)}',
+                              'Week of : $formattedWeek',
                               style: GoogleFonts.nunito(
-                                  fontSize: 17,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   color: Theme.of(context).colorScheme.primary),
                             ),
