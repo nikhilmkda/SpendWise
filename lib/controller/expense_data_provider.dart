@@ -8,6 +8,7 @@ import 'merge_sort.dart';
 class ExpenseData extends ChangeNotifier {
   //list of all expense
   bool isSearching = false;
+
   List<ExpenseItem> overallexpenseList = [];
   String _searchQuery = ''; // Variable to store the search query
   String get searchQuery => _searchQuery;

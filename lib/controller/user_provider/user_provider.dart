@@ -1,17 +1,13 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class UserDetailsProvider with ChangeNotifier {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  File? _image;
 
-  File? get image => _image;
   Uint8List? imageBytes;
   bool loadingFailed = false;
 
@@ -81,8 +77,6 @@ class UserDetailsProvider with ChangeNotifier {
     if (imageSource != null) {
       final pickedFile = await ImagePicker().pickImage(source: imageSource);
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
-
         // Convert the image to bytes (you can use a utility function for this)
         imageBytes = await pickedFile.readAsBytes();
         saveUserProfile(); //to save userprofilepic instantly after selecting

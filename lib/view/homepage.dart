@@ -274,7 +274,6 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final userDetailsProvider = Provider.of<UserDetailsProvider>(context);
-  
 
     //  userDetailsProvider.loadUserProfile();
     return Consumer<ExpenseData>(builder: (context, value, child) {

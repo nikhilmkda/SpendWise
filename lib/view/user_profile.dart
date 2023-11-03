@@ -23,8 +23,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Load user profile data when the page is initialized
-    // Provider.of<UserDetailsProvider>(context, listen: false).loadUserProfile();
+    
   }
 
   @override

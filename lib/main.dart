@@ -1,5 +1,5 @@
 import 'package:flutter_application_personal_expense_app/controller/change%20theme/dark_theme.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
@@ -19,12 +19,10 @@ import 'controller/change theme/theme_provider.dart';
 import 'controller/user_provider/user_provider.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 
-
 void main() async {
   //initialize hive
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
- tzdata.initializeTimeZones();
+  WidgetsFlutterBinding.ensureInitialized();
+  tzdata.initializeTimeZones();
   NotificationProvider().initializeNotifications();
   await _requestNotificationPermission();
 
@@ -46,7 +44,6 @@ void main() async {
       child: const MyApp(),
     ),
   );
-  FlutterNativeSplash.remove();
 }
 
 //request user to get notification permisssion
@@ -113,6 +110,7 @@ class MyApp extends StatelessWidget {
                         text: 'Home',
                         iconColor: Theme.of(context).colorScheme.primary,
                         onPressed: () {
+                          context.read<ExpenseData>().handleSearchEnd();
                           if (tabProvider.currentIndex == 0) {
                             Provider.of<ExpenseData>(context, listen: false)
                                 .scrollToTop();
@@ -137,10 +135,9 @@ class MyApp extends StatelessWidget {
                     ],
                     selectedIndex: tabProvider.currentIndex,
                     onTabChange: (index) {
-                      tabProvider.changeTabIndex(index);
-
                       // Call handleSearchEnd when the tab changes
-                      context.read<ExpenseData>().handleSearchEnd();
+
+                      tabProvider.changeTabIndex(index);
                     },
                   ),
                 ),

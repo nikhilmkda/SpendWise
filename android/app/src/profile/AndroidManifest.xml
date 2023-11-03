@@ -4,12 +4,5 @@
          the Flutter tool needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
-    <application
-        android:label="Your Wallet" // Set your desired app name here
-        android:icon="@mipmap/ic_stat_account_balance_wallet">
-
-        <!-- remove application if shows error -->
-        
-    </application>
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

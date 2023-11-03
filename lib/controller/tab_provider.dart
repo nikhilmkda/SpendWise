@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_personal_expense_app/view/settings.dart';
-import 'package:page_transition/page_transition.dart';
-
 import '../view/ToggleBtn_bar_chart_summary.dart';
 import '../view/homepage.dart';
 import '../view/user_profile.dart';
@@ -15,11 +13,6 @@ class TabProvider with ChangeNotifier {
     _currentIndex = index;
 
     notifyListeners();
-  }
-
-  void navigateToScreen(BuildContext context, Widget page) {
-    Navigator.push(context,
-        PageTransition(type: PageTransitionType.leftToRight, child: page));
   }
 
   Widget getCurrentScreen() {
