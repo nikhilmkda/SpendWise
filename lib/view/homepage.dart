@@ -89,6 +89,15 @@ class _HomepageState extends State<Homepage> {
           )
         ]),
         actions: [
+          // Cancel button
+          MaterialButton(
+            onPressed: cancel,
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.roboto(
+                  fontSize: 18, fontWeight: FontWeight.w600, color: Colors.red),
+            ),
+          ),
           // Save button
           MaterialButton(
             onPressed: save,
@@ -101,15 +110,6 @@ class _HomepageState extends State<Homepage> {
               ),
             ),
           ),
-          // Cancel button
-          MaterialButton(
-            onPressed: cancel,
-            child: Text(
-              'Cancel',
-              style: GoogleFonts.roboto(
-                  fontSize: 18, fontWeight: FontWeight.w600, color: Colors.red),
-            ),
-          )
         ],
       ),
     );
