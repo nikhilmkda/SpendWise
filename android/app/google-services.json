@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "160853398185",
+    "project_id": "nikhilzspendwise",
+    "storage_bucket": "nikhilzspendwise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160853398185:android:d2bc9d4e3074fd52818fb8",
+        "android_client_info": {
+          "package_name": "com.nikhilz.spendwise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160853398185-0gfh9khc429mumobhlnuo9rikdve88ko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikhilz.spendwise",
+            "certificate_hash": "48e1311f2b5c6f6ba35ab3f0d3b80d1f9e77b331"
+          }
+        },
+        {
+          "client_id": "160853398185-0gubf9vukqf63jgburn6ivlq32qh60p7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9J4DHmVGd6qGMJ7eYZYf6cS1OmP1GRYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160853398185-0gubf9vukqf63jgburn6ivlq32qh60p7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
