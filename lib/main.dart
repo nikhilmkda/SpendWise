@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_application_personal_expense_app/controller/change%20theme/dark_theme.dart';
+import 'package:flutter_application_personal_expense_app/initial_screen/view/initial_screen.dart';
 import 'package:flutter_application_personal_expense_app/sign_in/controller/sign_in_provider.dart';
 import 'package:flutter_application_personal_expense_app/sign_in/view/sign_in_screen.dart';
+import 'package:flutter_application_personal_expense_app/view/bottom_nav_screen.dart';
 
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -72,91 +74,18 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SignInProvider()),
       ],
       child: MaterialApp(
-        title: 'Expense App',
-        debugShowCheckedModeBanner: false,
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: Provider.of<ThemeProvider>(context).currentThemeMode,
-        home: Scaffold(
-            bottomNavigationBar: Consumer<TabProvider>(
-              builder: (context, tabProvider, _) => Padding(
-                padding: const EdgeInsets.only(bottom: 0, left: 0, right: 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0),
-                    ),
-                    color: Theme.of(context)
-                        .colorScheme
-                        .background
-                        .withOpacity(0.8),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: GNav(
-                      //backgroundColor: Colors.black26,
-                      gap: 3,
+          title: 'Expense App',
+          debugShowCheckedModeBanner: false,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: Provider.of<ThemeProvider>(context).currentThemeMode,
 
-                      hoverColor: Colors.amber,
-                      activeColor: Theme.of(context).colorScheme.primary,
-                      tabBackgroundColor:
-                          Theme.of(context).colorScheme.background,
-
-                      tabBorderRadius: 40,
-                      iconSize: 24,
-                      padding: const EdgeInsets.all(12),
-                      duration: const Duration(milliseconds: 400),
-                      tabs: [
-                        GButton(
-                          icon: Icons.home,
-                          text: 'Home',
-                          iconColor: Theme.of(context).colorScheme.primary,
-                          onPressed: () {
-                            context.read<ExpenseData>().handleSearchEnd();
-                            if (tabProvider.currentIndex == 0) {
-                              Provider.of<ExpenseData>(context, listen: false)
-                                  .scrollToTop();
-                            }
-                          },
-                        ),
-                        GButton(
-                          icon: Icons.person,
-                          text: 'Profile',
-                          iconColor: Theme.of(context).colorScheme.primary,
-                        ),
-                        GButton(
-                          icon: Icons.bar_chart_rounded,
-                          text: 'Chart',
-                          iconColor: Theme.of(context).colorScheme.primary,
-                        ),
-                        GButton(
-                          icon: Icons.settings,
-                          text: 'Settings',
-                          iconColor: Theme.of(context).colorScheme.primary,
-                        ),
-                      ],
-                      selectedIndex: tabProvider.currentIndex,
-                      onTabChange: (index) {
-                        // Call handleSearchEnd when the tab changes
-
-                        tabProvider.changeTabIndex(index);
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            body: GoogleSignInScreen(),
-            // Consumer<TabProvider>(
-            //   builder: (context, tabProvider, _) =>
-            //       tabProvider.getCurrentScreen(),
-            // ),
-            ),
-      ),
+          initialRoute: '/',
+            routes: {
+        '/': (context) => GoogleSignInScreen(),
+        '/home': (context) => BottomNavScreen(),
+      },
+         ),
     );
   }
 }
